@@ -1,0 +1,9 @@
+# Generated database (rebuilt by demo.py)
+nova.db
+nova.db-wal
+nova.db-shm
+
+# Python
+__pycache__/
+*.pyc
+.venv/

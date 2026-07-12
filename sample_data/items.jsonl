@@ -1,0 +1,8 @@
+{"source": "notes", "kind": "note", "title": "Standup summary", "content": "Team agreed to split the pipeline work across two branches this week."}
+{"source": "web", "kind": "link", "title": "Intro to data pipelines", "content": "A clear overview of extract transform load and why it matters."}
+{"source": "notes", "kind": "idea", "title": "Add expiry tracking", "content": "Perishable stock should carry an expiry date so reports can flag it."}
+{"source": "bot", "kind": "task", "title": "Back up the database nightly", "content": "Schedule a nightly export of the sqlite file to the backups folder."}
+{"source": "web", "kind": "link", "title": "SQLite WAL mode explained", "content": "Write ahead logging lets readers continue while a writer commits."}
+{"source": "notes", "kind": "idea", "title": "Weekly CSV export", "content": "Produce a CSV of the week's captures for review."}
+{"source": "bot", "kind": "task", "title": "", "content": "This record has no title and should be rejected by validation."}
+{"source": "web", "kind": "video", "title": "Unsupported kind example", "content": "This uses a kind that is not allowed and should be rejected."}
