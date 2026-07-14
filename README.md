@@ -45,12 +45,22 @@ No dependencies — uses only the Python standard library (`sqlite3`).
 python demo.py
 ```
 
-Expected: the pipeline reads 8 records, loads 6, and **rejects 2** (one with no
-title, one with an unsupported kind), then prints captures by source, captures
-by kind (with average length), and the longest captures.
+Expected: the pipeline reads 10 lines, loads 6, and **rejects 4** (one with no
+title, one with an unsupported kind, one that isn't valid JSON, one that isn't
+a JSON object), then prints captures by source, captures by kind (with average
+length), and the longest captures.
+
+## Tests
+
+```bash
+python -m pytest
+```
+
+Covers the `transform` validation rules, `extract`'s handling of malformed
+JSONL lines, and a full end-to-end pipeline run against a temporary database.
 
 ## What I'd add next
 
 - Load straight from an API instead of a file
 - A scheduled nightly backup of the database
-- Basic tests for the `transform` validation rules
+- Batch inserts in a single transaction for larger feeds
