@@ -59,6 +59,21 @@ python -m pytest
 Covers the `transform` validation rules, `extract`'s handling of malformed
 JSONL lines, and a full end-to-end pipeline run against a temporary database.
 
+## What I learned
+
+- **Validate at every boundary, and report what you reject.** My first
+  version of `extract` crashed on one malformed line — the fix wasn't a
+  bare `try/except`, it was deciding what a pipeline *should* do with bad
+  data: keep going, keep the bad record, and say why it was rejected
+- A pipeline summary (`read` / `loaded` / `rejected`) is the cheapest form
+  of observability — if `read` minus `loaded` doesn't match the rejects,
+  something is silently losing data
+- Separating extract / transform / load into their own functions made each
+  stage testable on its own; the bug fix came with tests that would catch
+  it coming back
+- SQLite's WAL mode, foreign keys and `CHECK` constraints give you real
+  data-integrity guarantees without running a database server
+
 ## What I'd add next
 
 - Load straight from an API instead of a file
