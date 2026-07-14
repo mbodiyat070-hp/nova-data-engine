@@ -17,14 +17,32 @@ from . import capture
 VALID_KINDS = {"note", "link", "task", "idea"}
 
 
-def extract(path: Path) -> list[dict]:
-    """Read raw records from a JSONL file (one JSON object per line)."""
-    records = []
-    for line in path.read_text(encoding="utf-8").splitlines():
+def extract(path: Path) -> tuple[list[dict], list[dict]]:
+    """Read raw records from a JSONL file (one JSON object per line).
+
+    Real-world feeds contain broken lines, so a line that isn't valid JSON
+    (or isn't a JSON object) becomes a rejected record with a reason,
+    rather than crashing the whole pipeline run.
+    """
+    records: list[dict] = []
+    rejected: list[dict] = []
+    for line_number, line in enumerate(
+            path.read_text(encoding="utf-8").splitlines(), start=1):
         line = line.strip()
-        if line:
-            records.append(json.loads(line))
-    return records
+        if not line:
+            continue
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError as exc:
+            rejected.append({"record": line,
+                             "reason": f"line {line_number}: invalid JSON ({exc.msg})"})
+            continue
+        if not isinstance(record, dict):
+            rejected.append({"record": line,
+                             "reason": f"line {line_number}: not a JSON object"})
+            continue
+        records.append(record)
+    return records, rejected
 
 
 def transform(record: dict) -> tuple[dict | None, str | None]:
@@ -63,8 +81,9 @@ def load(conn, records: list[dict]) -> int:
 
 def run(conn, path: Path) -> dict:
     """Run the full pipeline and return a small summary."""
-    raw = extract(path)
-    clean, rejected = [], []
+    raw, rejected = extract(path)
+    read = len(raw) + len(rejected)   # every non-empty line, good or bad
+    clean = []
     for record in raw:
         cleaned, reason = transform(record)
         if cleaned is not None:
@@ -73,4 +92,4 @@ def run(conn, path: Path) -> dict:
             rejected.append({"record": record, "reason": reason})
 
     loaded = load(conn, clean)
-    return {"read": len(raw), "loaded": loaded, "rejected": rejected}
+    return {"read": read, "loaded": loaded, "rejected": rejected}

@@ -6,3 +6,5 @@
 {"source": "notes", "kind": "idea", "title": "Weekly CSV export", "content": "Produce a CSV of the week's captures for review."}
 {"source": "bot", "kind": "task", "title": "", "content": "This record has no title and should be rejected by validation."}
 {"source": "web", "kind": "video", "title": "Unsupported kind example", "content": "This uses a kind that is not allowed and should be rejected."}
+{"source": "web", "kind": "note", "title": "Broken line example", "content": "This line is deliberately cut off and is not valid JSO
+"just a string, not an object"
